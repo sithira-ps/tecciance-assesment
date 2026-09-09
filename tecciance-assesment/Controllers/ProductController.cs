@@ -11,10 +11,12 @@ namespace tecciance_assesment.Controllers;
 public class ProductController : ControllerBase
 {
     private IProductService _productService;
+    private IReservationService _reservationService;
 
-    public ProductController(IProductService productService)
+    public ProductController(IProductService productService, IReservationService reservationService)
     {
         _productService = productService;
+        _reservationService = reservationService;
     }
 
     [HttpGet]
@@ -49,4 +51,13 @@ public class ProductController : ControllerBase
         var createdProduct = await _productService.CreateAsync(product);
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdProduct.Id }, createdProduct);
     }
+
+    [HttpPost("{id}/reservations")]
+    public async Task<ActionResult<Reservation>> CreateReservationAsync(int id, [FromBody] CreateReservationRequestDTO reservation)
+    {
+        var reservationKey = Guid.NewGuid().ToString();
+        var createdReservation = await _reservationService.CreateReservation(id, reservationKey, reservation.Quantity);
+        return Ok(createdReservation);
+    }
+
 }
