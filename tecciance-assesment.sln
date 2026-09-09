@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tecciance-assesment", "tecciance-assesment\tecciance-assesment.csproj", "{2CBE4546-A624-4AAC-AD77-27996F78C4E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tecciance-assesment.Test", "tecciance-assesment.Test\tecciance-assesment.Test.csproj", "{229F0332-E136-4ACD-8AB8-5A99D1126AAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{2CBE4546-A624-4AAC-AD77-27996F78C4E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CBE4546-A624-4AAC-AD77-27996F78C4E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CBE4546-A624-4AAC-AD77-27996F78C4E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{229F0332-E136-4ACD-8AB8-5A99D1126AAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{229F0332-E136-4ACD-8AB8-5A99D1126AAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{229F0332-E136-4ACD-8AB8-5A99D1126AAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{229F0332-E136-4ACD-8AB8-5A99D1126AAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
