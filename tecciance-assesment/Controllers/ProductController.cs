@@ -49,7 +49,7 @@ public class ProductController : ControllerBase
         };
 
         var createdProduct = await _productService.CreateAsync(product);
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdProduct.Id }, createdProduct);
+        return StatusCode(201, createdProduct);
     }
 
     [HttpPost("{id}/reservations")]
