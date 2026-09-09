@@ -4,3 +4,8 @@ NOTES
    - Add more tests
    - Check stock before reservation
    - Create reservation key in client side
+
+
+2.  Trade-offs made deliberately:
+    - SQLite for speed
+    - Minimal HTML based UI
