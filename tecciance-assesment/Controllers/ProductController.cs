@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using tecciance_assesment.DTOs;
 using tecciance_assesment.Models;
 using tecciance_assesment.Repositories;
 using tecciance_assesment.Services;
@@ -17,9 +18,35 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> CreateAsync([FromBody] Product product)
+    public async Task<ActionResult<IEnumerable<Product>>> GetAllAsync()
     {
-        await _productService.CreateAsync(product);
-        return Ok();
+        var products = await _productService.GetAllAsync();
+        return Ok(products);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Product>> GetByIdAsync(int id)
+    {
+        var product = await _productService.GetByIdAsync(id);
+
+        if (product == null)
+            return NotFound();
+
+        return Ok(product);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Product>> CreateAsync([FromBody] CreateProductRequestDTO newProduct)
+    {
+        // convert product DTO to product entity
+        var product = new Product
+        {
+            Name = newProduct.Name,
+            Sku = newProduct.Sku,
+            OnHand = newProduct.OnHand
+        };
+
+        var createdProduct = await _productService.CreateAsync(product);
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdProduct.Id }, createdProduct);
     }
 }
