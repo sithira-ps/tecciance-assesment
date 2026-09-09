@@ -1,0 +1,6 @@
+NOTES
+
+1. What I'd do differently with more time:
+   - Add more tests
+   - Check stock before reservation
+   - Create reservation key in client side
