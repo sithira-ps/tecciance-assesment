@@ -47,6 +47,11 @@ _ReSharper*/
 **/packages/*
 !**/packages/build/
 
+# appsettings
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
 # Others
 *.cache
 *.log
