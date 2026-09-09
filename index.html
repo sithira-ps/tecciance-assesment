@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product & Reservation Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #667eea;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: #777;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .product-sku {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .inline-form {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .inline-form .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .api-url {
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Product & Reservation Manager</h1>
+
+        <!-- Create Product Section -->
+        <div class="section">
+            <h2>Create Product</h2>
+            <div class="form-group">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" placeholder="Enter product name">
+            </div>
+            <div class="form-group">
+                <label for="productSku">SKU:</label>
+                <input type="text" id="productSku" placeholder="Enter SKU">
+            </div>
+            <div class="form-group">
+                <label for="onHand">On Hand Quantity:</label>
+                <input type="number" id="onHand" min="0" value="100" placeholder="Enter initial quantity">
+            </div>
+            <button onclick="createProduct()">Create Product</button>
+            <div id="createMessage"></div>
+        </div>
+
+        <!-- Product Status Section -->
+        <div class="section">
+            <h2>Product Status</h2>
+            <div class="inline-form">
+                <div class="form-group">
+                    <label for="productId">Product ID:</label>
+                    <input type="number" id="productId" min="1" placeholder="Enter product ID">
+                </div>
+                <button onclick="loadProductStatus()">Load Status</button>
+            </div>
+
+            <div id="statusContainer" class="hidden">
+                <div class="status-card">
+                    <div class="product-name" id="productNameDisplay"></div>
+                    <div class="product-sku" id="productSkuDisplay"></div>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <div class="status-label">On Hand</div>
+                            <div class="status-value" id="onHandValue">-</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Reserved</div>
+                            <div class="status-value" id="reservedValue">-</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Available</div>
+                            <div class="status-value" id="availableValue">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="statusMessage"></div>
+        </div>
+
+        <!-- Reserve Units Section -->
+        <div class="section">
+            <h2>Reserve Units</h2>
+            <div class="inline-form">
+                <div class="form-group">
+                    <label for="reserveProductId">Product ID:</label>
+                    <input type="number" id="reserveProductId" min="1" placeholder="Enter product ID">
+                </div>
+                <div class="form-group">
+                    <label for="reserveQuantity">Quantity:</label>
+                    <input type="number" id="reserveQuantity" min="1" value="10" placeholder="Quantity to reserve">
+                </div>
+                <button onclick="createReservation()">Reserve</button>
+            </div>
+            <div id="reserveMessage"></div>
+        </div>
+
+        <div class="api-url">API Endpoint: http://localhost:5128/api/product</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5128/api/product';
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 8000);
+        }
+
+        async function createProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const sku = document.getElementById('productSku').value.trim();
+            const onHand = parseInt(document.getElementById('onHand').value);
+
+            if (!name || !sku || isNaN(onHand) || onHand < 0) {
+                showMessage('createMessage', 'Please fill in all fields with valid values', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, sku, onHand })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('createMessage',
+                        `✓ Product created successfully! ID: <code>${data.id}</code>`,
+                        'success');
+                    document.getElementById('productName').value = '';
+                    document.getElementById('productSku').value = '';
+                    document.getElementById('onHand').value = '100';
+
+                    // Auto-populate the product ID in status and reserve sections
+                    document.getElementById('productId').value = data.id;
+                    document.getElementById('reserveProductId').value = data.id;
+                } else {
+                    showMessage('createMessage',
+                        `✗ Error ${response.status}: ${JSON.stringify(data)}`,
+                        'error');
+                }
+            } catch (error) {
+                showMessage('createMessage',
+                    `✗ Network error: ${error.message}. Make sure the backend is running on port 5128.`,
+                    'error');
+            }
+        }
+
+        async function loadProductStatus() {
+            const productId = parseInt(document.getElementById('productId').value);
+
+            if (isNaN(productId) || productId < 1) {
+                showMessage('statusMessage', 'Please enter a valid product ID', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${productId}`);
+
+                if (response.ok) {
+                    const product = await response.json();
+
+                    // Display product info
+                    document.getElementById('productNameDisplay').textContent = product.name;
+                    document.getElementById('productSkuDisplay').textContent = `SKU: ${product.sku}`;
+                    document.getElementById('onHandValue').textContent = product.onHand;
+
+                    // For now, we'll show onHand as available since backend doesn't calculate reserved yet
+                    // When backend is updated, it should return reserved and available
+                    const reserved = product.reserved || 0;
+                    const available = product.available !== undefined ? product.available : product.onHand;
+
+                    document.getElementById('reservedValue').textContent = reserved;
+                    document.getElementById('availableValue').textContent = available;
+
+                    document.getElementById('statusContainer').classList.remove('hidden');
+                    showMessage('statusMessage', '✓ Product status loaded', 'success');
+                } else if (response.status === 404) {
+                    document.getElementById('statusContainer').classList.add('hidden');
+                    showMessage('statusMessage', `✗ Product with ID ${productId} not found`, 'error');
+                } else {
+                    const data = await response.json();
+                    document.getElementById('statusContainer').classList.add('hidden');
+                    showMessage('statusMessage',
+                        `✗ Error ${response.status}: ${JSON.stringify(data)}`,
+                        'error');
+                }
+            } catch (error) {
+                document.getElementById('statusContainer').classList.add('hidden');
+                showMessage('statusMessage',
+                    `✗ Network error: ${error.message}. Make sure the backend is running on port 5128.`,
+                    'error');
+            }
+        }
+
+        async function createReservation() {
+            const productId = parseInt(document.getElementById('reserveProductId').value);
+            const quantity = parseInt(document.getElementById('reserveQuantity').value);
+
+            if (isNaN(productId) || productId < 1 || isNaN(quantity) || quantity < 1) {
+                showMessage('reserveMessage', 'Please enter valid product ID and quantity', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${productId}/reservations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ quantity })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('reserveMessage',
+                        `✓ Reservation created! Reservation ID: <code>${data.id}</code>, Key: <code>${data.reservationKey}</code>`,
+                        'success');
+
+                    // Auto-refresh product status if it's the same product
+                    const statusProductId = parseInt(document.getElementById('productId').value);
+                    if (statusProductId === productId) {
+                        setTimeout(() => loadProductStatus(), 500);
+                    }
+                } else if (response.status === 409) {
+                    showMessage('reserveMessage',
+                        `✗ Conflict (409): ${data.message || 'Cannot reserve - would exceed available inventory. ' + JSON.stringify(data)}`,
+                        'error');
+                } else if (response.status === 404) {
+                    showMessage('reserveMessage',
+                        `✗ Product with ID ${productId} not found`,
+                        'error');
+                } else {
+                    showMessage('reserveMessage',
+                        `✗ Error ${response.status}: ${JSON.stringify(data)}`,
+                        'error');
+                }
+            } catch (error) {
+                showMessage('reserveMessage',
+                    `✗ Network error: ${error.message}. Make sure the backend is running on port 5128.`,
+                    'error');
+            }
+        }
+
+        // Allow Enter key to submit forms
+        document.getElementById('productName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') createProduct();
+        });
+        document.getElementById('productSku').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') createProduct();
+        });
+        document.getElementById('onHand').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') createProduct();
+        });
+        document.getElementById('productId').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loadProductStatus();
+        });
+        document.getElementById('reserveProductId').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') createReservation();
+        });
+        document.getElementById('reserveQuantity').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') createReservation();
+        });
+    </script>
+</body>
+</html>
