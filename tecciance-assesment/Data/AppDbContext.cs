@@ -14,9 +14,13 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // seed data from the Products table
         modelBuilder.Entity<Product>().HasData(
             new Product { Id = 1, Name = "Laptop", Sku = "ABC1200", OnHand = 20 },
             new Product { Id = 2, Name = "Phone", Sku = "ABC1200", OnHand = 10 }
         );
+
+        // add a unique index to Reservations table
+        modelBuilder.Entity<Reservation>().HasIndex(r => r.ReservationKey).IsUnique();
     }
 }
