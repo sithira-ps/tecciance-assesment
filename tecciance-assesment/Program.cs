@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=orders.db"));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=inventory.db"));
 
 var app = builder.Build();
 
