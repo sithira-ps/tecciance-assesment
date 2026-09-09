@@ -1,0 +1,6 @@
+@tecciance_assesment_HostAddress = http://localhost:5128
+
+GET {{tecciance_assesment_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
